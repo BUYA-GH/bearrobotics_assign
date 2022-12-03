@@ -8,11 +8,11 @@ class CardAdmin(admin.ModelAdmin):
 
 class AccountAdmin(admin.ModelAdmin):
     search_fields = ('accountNumber', 'author__cardNum', )
-    list_display = ('accountNumber', 'author__cardNum', 'balance', )
+    list_display = ('accountNumber', 'author', 'balance', )
 
 class TransitionAdmin(admin.ModelAdmin):
     search_fields = ('account__accountNumber', )
-    list_display = ('account__accountNumber', 'receivedPaid', 'transact_at', )
+    list_display = ('account', 'receivedPaid', 'transact_at', )
 
 admin.site.register(Card, CardAdmin)
 admin.site.register(Account, AccountAdmin)
