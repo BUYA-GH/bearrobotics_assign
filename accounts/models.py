@@ -1,3 +1,18 @@
 from django.db import models
 
+class Card(models.Model):
+    cardNum = models.CharField(max_length=16, unique=True)
+    pinNum = models.CharField(max_length=4)
+
 # Create your models here.
+class Account(models.Model):
+    accountNumber = models.CharField(max_length=255, unique=True)
+    balance = models.IntegerField(default=0)
+
+    author = models.OneToOneField(Card, on_delete=models.CASCADE, related_name="card_account")
+
+class Transition(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="account_transition")
+    receivedPaid = models.IntegerField()
+
+    transact_at = models.DateTimeField(auto_now_add = True)
