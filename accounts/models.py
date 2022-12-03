@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 class Card(models.Model):
     cardNum = models.CharField(max_length=16, unique=True)

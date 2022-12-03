@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 
 """WARNING!!!
@@ -27,4 +27,5 @@ admin.site.has_permission = lambda r: setattr(r, 'user', AccessUser()) or True
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('atm/v0/', include('accounts.urls'))
 ]
