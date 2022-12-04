@@ -61,6 +61,16 @@ class ATMTestCase(TestCase):
         )
         return res
 
+    def do_거래_내역_보기(self, accountNumber):
+        res: Response = self.client.post(
+            reverse('get_transaciton_list'),
+            data={
+                'accountNumber': accountNumber
+            },
+            format='json',
+        )
+        return res
+
     def test_create_card_account(self):
         res: Response = self.do_카드_계좌_생성(pinnum="1234")
         self.assertEqual(res.status_code, 200)
@@ -75,6 +85,14 @@ class ATMTestCase(TestCase):
         self.assertEqual(res2.status_code, 200)
         self.assertEqual(res2.data['cardNum'], res1.data['cardNum'])
         self.assertEqual(res2.data['accountNumber'], res1.data['accountNumber'])
+    
+    def test_insert_incorrect_pin_number(self):
+        res1: Response = self.do_카드_계좌_생성(pinnum="1234")
+        self.assertEqual(res1.status_code, 200)
+        self.assertEqual(len(res1.data['cardNum']), 16)
+
+        res2: Response = self.do_카드_삽입(pinnum="5678", cardnum=res1.data['cardNum'])
+        self.assertEqual(res2.status_code, 400)
 
     def test_insert_card_and_see_balance(self):
         res1: Response = self.do_카드_계좌_생성(pinnum="1234")
@@ -91,4 +109,26 @@ class ATMTestCase(TestCase):
         res1: Response = self.do_카드_삽입(pinnum="1234", cardnum=res1.data['cardNum'])
 
         res2: Response = self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
-        
+        self.assertEqual(res2.status_code, 200)
+        self.assertEqual(res2.data['account'], res1.data['accountNumber'])
+        self.assertEqual(res2.data['receivedPaid'], 30)
+        self.assertEqual(res2.data['is_deposit'], True)
+        self.assertEqual(res2.data['balance'], 30)
+
+        res2: Response = self.do_출금(accountNumber=res1.data['accountNumber'], receivedPaid=15)
+        self.assertEqual(res2.status_code, 200)
+        self.assertEqual(res2.data['account'], res1.data['accountNumber'])
+        self.assertEqual(res2.data['receivedPaid'], 15)
+        self.assertEqual(res2.data['is_deposit'], False)
+        self.assertEqual(res2.data['balance'], 15)
+
+    def test_check_breakdown(self):
+        res1: Response = self.do_카드_계좌_생성(pinnum="1234")
+        res1: Response = self.do_카드_삽입(pinnum="1234", cardnum=res1.data['cardNum'])
+        res2: Response = self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
+        res2: Response = self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
+        res2: Response = self.do_출금(accountNumber=res1.data['accountNumber'], receivedPaid=15)
+
+        res3: Response = self.do_거래_내역_보기(accountNumber=res1.data['accountNumber'])
+        self.assertEqual(res3.status_code, 200)
+        self.assertEqual(len(res3.data), 3)
