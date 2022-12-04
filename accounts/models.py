@@ -18,9 +18,10 @@ class Account(models.Model):
     def __str__(self):
         return f"{self.accountNumber} / {self.author}"
 
-class Transition(models.Model):
+class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="account_transition")
     receivedPaid = models.IntegerField()
+    is_deposit = models.BooleanField()
 
     transact_at = models.DateTimeField(auto_now_add = True)
 

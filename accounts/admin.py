@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Card, Account, Transition
+from .models import Card, Account, Transaction
 
 # Register your models here.
 class CardAdmin(admin.ModelAdmin):
@@ -11,10 +11,10 @@ class AccountAdmin(admin.ModelAdmin):
     search_fields = ('accountNumber', 'author__cardNum', )
     list_display = ('accountNumber', 'author', 'balance', )
 
-class TransitionAdmin(admin.ModelAdmin):
+class TransactionAdmin(admin.ModelAdmin):
     search_fields = ('account__accountNumber', )
     list_display = ('account', 'receivedPaid', 'transact_at', )
 
 admin.site.register(Card, CardAdmin)
 admin.site.register(Account, AccountAdmin)
-admin.site.register(Transition, TransitionAdmin)
+admin.site.register(Transaction, TransactionAdmin)
