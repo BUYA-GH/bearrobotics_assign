@@ -24,12 +24,16 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class TransactionWorkSerializer(TransactionSerializer):
     # read-only : not need to override
+    balance = serializers.SerializerMethodField()
 
     # both
     receivedPaid = serializers.IntegerField()
 
     # write-only
     accountNumber = serializers.CharField(write_only=True)
+
+    def get_balance(self, obj):
+        return self.context['balance']
 
     def validate_receivedPaid(self, value):
         if value <= 0:
@@ -48,7 +52,11 @@ class TransactionWorkSerializer(TransactionSerializer):
         validated_data['account'] = account
         transaction = Transaction(**validated_data)
         transaction.save()
+
+        self.context['balance'] = account.balance
+
         return transaction
 
     class Meta(TransactionSerializer.Meta):
-        fields = TransactionSerializer.Meta.fields + ('accountNumber',)
+        fields = TransactionSerializer.Meta.fields + ('accountNumber', 'balance', )
+        read_only_fields = TransactionSerializer.Meta.read_only_fields + ('balance', )
