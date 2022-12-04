@@ -3,11 +3,19 @@ from rest_framework.exceptions import ValidationError
 
 from accounts.models import Card, Account, Transition
 
-class TransactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Transition
-        fields = ('account', 'balance', 'author',)
-        read_only_fields = ('account', 'balance', 'author',)
+class AccountSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField()
 
-class TrasactionWorkSerializer(TransactionSerializer):
-    
+    class Meta:
+        model = Account
+        fields = ('accountNumber', 'balance', 'author',)
+        read_only_fields = ('accountNumber', 'balance', 'author',)
+
+# class TransactionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Transition
+#         fields = ('account', 'receivedPaid', 'transact_at',)
+#         read_only_fields = ('account', 'receivedPaid', 'transact_at',)
+
+# class TransactionWorkSerializer(TransactionSerializer):
+#     pass

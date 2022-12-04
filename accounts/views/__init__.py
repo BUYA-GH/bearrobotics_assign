@@ -1,2 +1,2 @@
-from card import *
-from trasition import *
+from .card import *
+from .trasition import *
