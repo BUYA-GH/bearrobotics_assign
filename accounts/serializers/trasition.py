@@ -1,7 +1,9 @@
+from django.db import transaction
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from accounts.models import Card, Account, Transaction
+from accounts.models import Account, Transaction
 
 class AccountSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
@@ -40,6 +42,7 @@ class TransactionWorkSerializer(TransactionSerializer):
             raise ValidationError('receivedPaid should be Positive')
         return value
 
+    @transaction.atomic()
     def create(self, validated_data):
         accountNumber = validated_data.pop('accountNumber')
 
