@@ -1,4 +1,3 @@
-# from django.test import TestCase
 from django.urls import reverse
 
 from rest_framework.test import APIClient
@@ -125,10 +124,10 @@ class ATMTestCase(TestCase):
     def test_check_breakdown(self):
         res1: Response = self.do_카드_계좌_생성(pinnum="1234")
         res1: Response = self.do_카드_삽입(pinnum="1234", cardnum=res1.data['cardNum'])
-        res2: Response = self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
-        res2: Response = self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
-        res2: Response = self.do_출금(accountNumber=res1.data['accountNumber'], receivedPaid=15)
+        self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
+        self.do_입금(accountNumber=res1.data['accountNumber'], receivedPaid=30)
+        self.do_출금(accountNumber=res1.data['accountNumber'], receivedPaid=15)
 
-        res3: Response = self.do_거래_내역_보기(accountNumber=res1.data['accountNumber'])
-        self.assertEqual(res3.status_code, 200)
-        self.assertEqual(len(res3.data), 3)
+        res2: Response = self.do_거래_내역_보기(accountNumber=res1.data['accountNumber'])
+        self.assertEqual(res2.status_code, 200)
+        self.assertEqual(len(res2.data), 3)
