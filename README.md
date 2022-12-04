@@ -16,6 +16,8 @@ First, You need Python to run.
 
 I developed this project in Python version 3.8.13, so Running this project in python version 3.8 won't cause any problems.
 
+Also I recommend you to run this project in Python's virtual environment, or using anaconda's virtual environment
+
 After cloning this project and installing additional package by pip, just running this command `python manage.py migrate` and `python manage.py runserver`
 
 # do Test
